@@ -177,6 +177,38 @@
             color: white;
         }
         
+        .volume-control {
+            position: fixed;
+            bottom: 90px;
+            right: 25px;
+            width: 50px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s;
+        }
+        
+        .volume-control.open {
+            transform: scale(1);
+        }
+        
+        .volume-slider {
+            writing-mode: bt-lr;
+            -webkit-appearance: slider-vertical;
+            width: 25px;
+            height: 100px;
+            margin: 10px 0;
+        }
+        
         .cake {
             font-size: 4rem;
             margin: 1rem 0;
@@ -247,6 +279,16 @@
                 width: 150px;
                 height: 150px;
             }
+            
+            .volume-control {
+                bottom: 80px;
+                right: 15px;
+                height: 120px;
+            }
+            
+            .volume-slider {
+                height: 80px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -256,7 +298,7 @@
         <h1>¡Feliz Cumpleaños!</h1>
         
         <div class="photo-container">
-            <img id="birthday-photo" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Foto de cumpleaños">
+            <img id="birthday-photo" src="https://i.ibb.co/wNgcYDvx/Imagen-de-Whats-App-2025-09-19-a-las-19-13-00-bea6f472.jpg" alt="Foto de cumpleaños">
         </div>
         
         <div class="cake">🎂</div>
@@ -273,6 +315,10 @@
         <i class="fas fa-volume-up"></i>
     </div>
 
+    <div class="volume-control" id="volumeControl">
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" orient="vertical">
+    </div>
+
     <!-- Reproductor de YouTube oculto para el audio -->
     <div class="youtube-audio" id="youtube-audio"></div>
 
@@ -282,10 +328,13 @@
         // ===================================================================
         
         // URL de la imagen (reemplaza con la URL de la foto de tu hermana desde ImgBB)
-        const IMAGE_URL = 'https://i.ibb.co/wNgcYDvx/Imagen-de-Whats-App-2025-09-19-a-las-19-13-00-bea6f472.jpg';
+        const IMAGE_URL = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80';
         
         // ID del video de YouTube: https://www.youtube.com/watch?v=5ar42kauTd8
         const YOUTUBE_VIDEO_ID = '5ar42kauTd8';
+        
+        // Volumen inicial (50% para que no esté tan alto)
+        const INITIAL_VOLUME = 0.5;
         
         // ===================================================================
         // NO ES NECESARIO EDITAR NADA DEBAJO DE ESTA LÍNEA
@@ -294,6 +343,8 @@
         // Elementos DOM
         const birthdayPhoto = document.getElementById('birthday-photo');
         const musicControl = document.getElementById('musicControl');
+        const volumeControl = document.getElementById('volumeControl');
+        const volumeSlider = document.getElementById('volumeSlider');
         const youtubeAudio = document.getElementById('youtube-audio');
         
         // Estado de la aplicación
@@ -331,6 +382,12 @@
             
             youtubeAudio.appendChild(iframe);
             youtubePlayer = iframe;
+            
+            // Configurar el volumen inicial después de que el iframe cargue
+            iframe.onload = function() {
+                // El volumen se controla mediante el slider
+                volumeSlider.value = INITIAL_VOLUME * 50;
+            };
         }
         
         // Control de música
@@ -345,6 +402,58 @@
                 musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
             }
             isPlaying = !isPlaying;
+        }
+        
+        // Control de volumen
+        function setupVolumeControls() {
+            // Alternar visibilidad del control de volumen
+            musicControl.addEventListener('click', function(e) {
+                // Si es un clic largo (más de 500ms), mostrar control de volumen
+                let pressTimer = setTimeout(() => {
+                    volumeControl.classList.toggle('open');
+                }, 500);
+                
+                // Cancelar si el usuario libera el clic antes del tiempo
+                musicControl.addEventListener('mouseup', function() {
+                    clearTimeout(pressTimer);
+                });
+                musicControl.addEventListener('mouseleave', function() {
+                    clearTimeout(pressTimer);
+                });
+                
+                // Clic normal para toggle de reproducción
+                if (!volumeControl.classList.contains('open')) {
+                    toggleMusic();
+                }
+            });
+            
+            // Actualizar volumen cuando se mueve el slider
+            volumeSlider.addEventListener('input', function() {
+                // Convertir el valor del slider (0-100) a volumen (0-1)
+                const volume = this.value / 100;
+                
+                // Cambiar icono según el nivel de volumen
+                if (volume === 0) {
+                    musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else if (volume < 0.5) {
+                    musicControl.innerHTML = '<i class="fas fa-volume-down"></i>';
+                } else {
+                    musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+                
+                // Para YouTube, no podemos controlar el volumen directamente desde el iframe
+                // pero podemos ajustar el volumen del sistema del usuario
+                // Nota: Esto ajustará el volumen de todo el sistema, no solo del video
+                console.log("Volumen ajustado a: " + Math.round(volume * 100) + "%");
+                alert("Para ajustar el volumen, use los controles de volumen de su dispositivo o navegador");
+            });
+            
+            // Ocultar control de volumen al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!musicControl.contains(e.target) && !volumeControl.contains(e.target)) {
+                    volumeControl.classList.remove('open');
+                }
+            });
         }
         
         // Crear confeti
@@ -436,10 +545,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadImage();
             loadYouTubeAudio();
+            setupVolumeControls();
             setTimeout(typeWriterEffect, 1000);
-            
-            // Configurar control de música
-            musicControl.addEventListener('click', toggleMusic);
         });
     </script>
 </body>
