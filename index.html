@@ -177,36 +177,82 @@
             color: white;
         }
         
-        .volume-control {
+        .volume-panel {
             position: fixed;
             bottom: 90px;
-            right: 25px;
-            width: 50px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.9);
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 25px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 99;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 15px 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 99;
             transform: scale(0);
             transform-origin: bottom right;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
         
-        .volume-control.open {
+        .volume-panel.open {
             transform: scale(1);
         }
         
+        .volume-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e75480;
+        }
+        
+        .volume-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .volume-icon {
+            font-size: 20px;
+            color: #e75480;
+        }
+        
         .volume-slider {
-            writing-mode: bt-lr;
-            -webkit-appearance: slider-vertical;
-            width: 25px;
-            height: 100px;
-            margin: 10px 0;
+            -webkit-appearance: none;
+            width: 120px;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e75480;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e75480;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+        
+        .volume-percentage {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e75480;
+            min-width: 35px;
+            text-align: center;
         }
         
         .cake {
@@ -248,17 +294,6 @@
             100% { transform: translateY(-100px) rotate(20deg); }
         }
         
-        .youtube-audio {
-            position: fixed;
-            top: -100px;
-            left: 0;
-            width: 100px;
-            height: 100px;
-            opacity: 0.01;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .age { font-size: 4.5rem; }
@@ -267,6 +302,16 @@
             .photo-container {
                 width: 180px;
                 height: 180px;
+            }
+            
+            .volume-panel {
+                bottom: 80px;
+                right: 15px;
+                padding: 12px;
+            }
+            
+            .volume-slider {
+                width: 100px;
             }
         }
         
@@ -278,16 +323,6 @@
             .photo-container {
                 width: 150px;
                 height: 150px;
-            }
-            
-            .volume-control {
-                bottom: 80px;
-                right: 15px;
-                height: 120px;
-            }
-            
-            .volume-slider {
-                height: 80px;
             }
         }
     </style>
@@ -315,25 +350,35 @@
         <i class="fas fa-volume-up"></i>
     </div>
 
-    <div class="volume-control" id="volumeControl">
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" orient="vertical">
+    <div class="volume-panel" id="volumePanel">
+        <div class="volume-title">Volumen</div>
+        <div class="volume-slider-container">
+            <i class="fas fa-volume-down volume-icon"></i>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+            <i class="fas fa-volume-up volume-icon"></i>
+            <span class="volume-percentage" id="volumePercentage">50%</span>
+        </div>
     </div>
 
-    <!-- Reproductor de YouTube oculto para el audio -->
-    <div class="youtube-audio" id="youtube-audio"></div>
+    <!-- Audio con tu archivo MP3 de Dropbox (URL convertida a enlace directo) -->
+    <audio id="birthdayAudio" loop>
+        <source src="https://www.dropbox.com/scl/fi/q9hl8xqwwwpn96uh2h7i7/Que-Dios-Te-Bendiga-Peter-Manjarr-s-Y-Sergio-Luis-Rodr-guez-Video-Letra.mp3?rlkey=co3di3lvtaarfvevyyt7pibno&st=2kglrpgc&raw=1" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
 
     <script>
         // ===================================================================
         // CONFIGURACIÓN
         // ===================================================================
         
-        // URL de la imagen (reemplaza con la URL de la foto de tu hermana desde ImgBB)
-        const IMAGE_URL = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80';
+        // URL de la imagen
+        const IMAGE_URL = 'https://i.ibb.co/wNgcYDvx/Imagen-de-Whats-App-2025-09-19-a-las-19-13-00-bea6f472.jpg';
         
-        // ID del video de YouTube: https://www.youtube.com/watch?v=5ar42kauTd8
-        const YOUTUBE_VIDEO_ID = '5ar42kauTd8';
+        // URL de música (archivo MP3 de Dropbox)
+        // He modificado el enlace para que sea un enlace directo
+        const MUSIC_URL = 'https://www.dropbox.com/scl/fi/q9hl8xqwwwpn96uh2h7i7/Que-Dios-Te-Bendiga-Peter-Manjarr-s-Y-Sergio-Luis-Rodr-guez-Video-Letra.mp3?rlkey=co3di3lvtaarfvevyyt7pibno&st=2kglrpgc&raw=1';
         
-        // Volumen inicial (50% para que no esté tan alto)
+        // Volumen inicial (50%)
         const INITIAL_VOLUME = 0.5;
         
         // ===================================================================
@@ -343,115 +388,127 @@
         // Elementos DOM
         const birthdayPhoto = document.getElementById('birthday-photo');
         const musicControl = document.getElementById('musicControl');
-        const volumeControl = document.getElementById('volumeControl');
+        const volumePanel = document.getElementById('volumePanel');
         const volumeSlider = document.getElementById('volumeSlider');
-        const youtubeAudio = document.getElementById('youtube-audio');
+        const volumePercentage = document.getElementById('volumePercentage');
+        const audio = document.getElementById('birthdayAudio');
         
         // Estado de la aplicación
-        let isPlaying = true;
-        let youtubePlayer;
+        let isPlaying = false;
+        let pressTimer;
         
         // Cargar imagen desde URL
         function loadImage() {
-            if (!IMAGE_URL) {
-                console.error('No hay URL de imagen configurada');
-                return;
-            }
-            
             birthdayPhoto.src = IMAGE_URL;
             birthdayPhoto.onerror = function() {
                 console.error('Error al cargar la imagen. Verifica que la URL sea correcta.');
+                // Imagen de respaldo en caso de error
+                birthdayPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220"><rect width="220" height="220" fill="%23f5c3e6"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="%23987fb5">Foto de cumpleaños</text></svg>';
             };
         }
         
-        // Cargar reproductor de YouTube para audio
-        function loadYouTubeAudio() {
-            if (!YOUTUBE_VIDEO_ID) {
-                console.error('No hay ID de video configurado');
-                return;
-            }
+        // Cargar música
+        function loadMusic() {
+            // Configurar la fuente de audio
+            const sourceElement = audio.querySelector('source');
+            sourceElement.src = MUSIC_URL;
             
-            // Crear iframe de YouTube
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0&modestbranding=1&rel=0`;
-            iframe.width = "100";
-            iframe.height = "100";
-            iframe.frameBorder = '0';
-            iframe.allow = 'autoplay; encrypted-media';
-            iframe.allowFullscreen = false;
+            // Recargar el elemento de audio
+            audio.load();
             
-            youtubeAudio.appendChild(iframe);
-            youtubePlayer = iframe;
+            // Configurar volumen inicial
+            audio.volume = INITIAL_VOLUME;
+            volumeSlider.value = INITIAL_VOLUME * 100;
+            volumePercentage.textContent = `${INITIAL_VOLUME * 100}%`;
+            updateVolumeIcon(INITIAL_VOLUME * 100);
             
-            // Configurar el volumen inicial después de que el iframe cargue
-            iframe.onload = function() {
-                // El volumen se controla mediante el slider
-                volumeSlider.value = INITIAL_VOLUME * 50;
+            // Intentar reproducir automáticamente después de una interacción del usuario
+            const tryPlayAudio = () => {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updateVolumeIcon(INITIAL_VOLUME * 100);
+                    document.removeEventListener('click', tryPlayAudio);
+                }).catch(error => {
+                    console.log("Reproducción automática falló: ", error);
+                    // Mostrar instrucciones si falla la reproducción automática
+                    const messageElement = document.querySelector('.message');
+                    const originalText = messageElement.textContent;
+                    messageElement.innerHTML = originalText + '<br><br><small>Haz clic en el botón de música para activar el audio</small>';
+                });
             };
+            
+            // Esperar a que el usuario interactúe con la página
+            document.addEventListener('click', tryPlayAudio, { once: true });
         }
         
         // Control de música
         function toggleMusic() {
-            if (!youtubePlayer) return;
-            
             if (isPlaying) {
-                youtubePlayer.src = youtubePlayer.src.replace('autoplay=1', 'autoplay=0');
+                audio.pause();
                 musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
             } else {
-                youtubePlayer.src = youtubePlayer.src.replace('autoplay=0', 'autoplay=1');
-                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updateVolumeIcon(volumeSlider.value);
+                }).catch(error => {
+                    console.log("Error al reproducir: ", error);
+                    alert("Error al reproducir el audio. Por favor, verifica que la URL del archivo sea correcta.");
+                });
             }
             isPlaying = !isPlaying;
         }
         
-        // Control de volumen
+        // Actualizar icono de volumen según el nivel
+        function updateVolumeIcon(volume) {
+            if (volume == 0) {
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else if (volume < 50) {
+                musicControl.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
+        
+        // Mostrar u ocultar panel de volumen
+        function toggleVolumePanel() {
+            volumePanel.classList.toggle('open');
+        }
+        
+        // Configurar controles de volumen
         function setupVolumeControls() {
-            // Alternar visibilidad del control de volumen
-            musicControl.addEventListener('click', function(e) {
-                // Si es un clic largo (más de 500ms), mostrar control de volumen
-                let pressTimer = setTimeout(() => {
-                    volumeControl.classList.toggle('open');
+            // Eventos para el control de música
+            musicControl.addEventListener('mousedown', function() {
+                pressTimer = setTimeout(() => {
+                    toggleVolumePanel();
                 }, 500);
-                
-                // Cancelar si el usuario libera el clic antes del tiempo
-                musicControl.addEventListener('mouseup', function() {
-                    clearTimeout(pressTimer);
-                });
-                musicControl.addEventListener('mouseleave', function() {
-                    clearTimeout(pressTimer);
-                });
-                
-                // Clic normal para toggle de reproducción
-                if (!volumeControl.classList.contains('open')) {
+            });
+            
+            musicControl.addEventListener('mouseup', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            musicControl.addEventListener('mouseleave', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            musicControl.addEventListener('click', function(e) {
+                if (!volumePanel.classList.contains('open')) {
                     toggleMusic();
                 }
             });
             
             // Actualizar volumen cuando se mueve el slider
             volumeSlider.addEventListener('input', function() {
-                // Convertir el valor del slider (0-100) a volumen (0-1)
                 const volume = this.value / 100;
-                
-                // Cambiar icono según el nivel de volumen
-                if (volume === 0) {
-                    musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
-                } else if (volume < 0.5) {
-                    musicControl.innerHTML = '<i class="fas fa-volume-down"></i>';
-                } else {
-                    musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-                }
-                
-                // Para YouTube, no podemos controlar el volumen directamente desde el iframe
-                // pero podemos ajustar el volumen del sistema del usuario
-                // Nota: Esto ajustará el volumen de todo el sistema, no solo del video
-                console.log("Volumen ajustado a: " + Math.round(volume * 100) + "%");
-                alert("Para ajustar el volumen, use los controles de volumen de su dispositivo o navegador");
+                volumePercentage.textContent = `${this.value}%`;
+                audio.volume = volume;
+                updateVolumeIcon(this.value);
             });
             
-            // Ocultar control de volumen al hacer clic fuera
+            // Ocultar panel de volumen al hacer clic fuera
             document.addEventListener('click', function(e) {
-                if (!musicControl.contains(e.target) && !volumeControl.contains(e.target)) {
-                    volumeControl.classList.remove('open');
+                if (!musicControl.contains(e.target) && !volumePanel.contains(e.target)) {
+                    volumePanel.classList.remove('open');
                 }
             });
         }
@@ -544,7 +601,7 @@
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             loadImage();
-            loadYouTubeAudio();
+            loadMusic();
             setupVolumeControls();
             setTimeout(typeWriterEffect, 1000);
         });
