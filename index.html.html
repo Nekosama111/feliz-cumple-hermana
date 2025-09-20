@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz 27° Cumpleaños!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5c3e6, #b19cd9, #87ceeb);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            position: relative;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 2s ease;
+        }
+        
+        h1 {
+            color: #e75480;
+            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .photo-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1.5rem;
+            border: 5px solid #e75480;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f5c3e6, #b19cd9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .photo-placeholder:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .photo-container img:hover {
+            transform: scale(1.05);
+        }
+        
+        .age {
+            font-size: 5.5rem;
+            color: #e75480;
+            margin: 1rem 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .from {
+            margin-top: 2rem;
+            font-style: italic;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .date {
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #e75480;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0.8;
+            border-radius: 0;
+            animation: fall linear forwards;
+            z-index: 1;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+        
+        .music-control i {
+            font-size: 28px;
+            color: #e75480;
+        }
+        
+        .cake {
+            font-size: 4rem;
+            margin: 1rem 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .github-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #e75480;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .github-link:hover {
+            background: #d43d6d;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .age { font-size: 4.5rem; }
+            .message { font-size: 1.1rem; }
+            .container { padding: 1.8rem; }
+            .photo-container {
+                width: 180px;
+                height: 180px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .age { font-size: 4rem; }
+            .message { font-size: 1rem; }
+            .container { padding: 1.5rem; }
+            .photo-container {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>¡Feliz Cumpleaños!</h1>
+        
+        <div class="photo-container">
+            <!-- Reemplaza esto con la foto de tu hermana -->
+            <div class="photo-placeholder" id="uploadTrigger">Haz clic para seleccionar una foto</div>
+            <!-- Para agregar la foto: 
+                 <img src="URL_DE_LA_FOTO" alt="Mi hermana">
+            -->
+        </div>
+        
+        <div class="cake">🎂</div>
+        <div class="age">27</div>
+        
+        <p class="message">Hoy es un día muy especial porque celebramos tus 27 años de vida. Que este nuevo ciclo esté lleno de alegría, amor y bendiciones. Eres una persona maravillosa y te mereces todo lo mejor.</p>
+        
+        <p class="from">Con todo nuestro cariño,<br>Tu hermano Sebastian Velasquez Orozco<br>y tu madre Gloria Janet Orozco</p>
+        
+        <p class="date">18 de Septiembre 2025</p>
+    </div>
+    
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-volume-up"></i>
+    </div>
+    
+    <audio id="birthdayAudio" loop>
+        <!-- Audio integrado usando un data URI para evitar problemas de URL -->
+        <source src="data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="instructions">
+        <p><strong>Instrucciones para GitHub:</strong></p>
+        <p>1. Guarda este código como index.html</p>
+        <p>2. Crea un repositorio en GitHub con el nombre: feliz-cumple-hermana</p>
+        <p>3. Sube el archivo index.html y tu foto al repositorio</p>
+        <p>4. Activa GitHub Pages en la configuración del repositorio</p>
+        <a href="https://github.com/new" class="github-link" target="_blank">Crear repositorio en GitHub</a>
+    </div>
+
+    <script>
+        // Crear confeti
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#ffafcc', '#83e377', '#e75480', '#9b5de5'];
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    // Estilo aleatorio
+                    const size = Math.floor(Math.random() * 15) + 5;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size}px`;
+                    confetti.style.backgroundColor = color;
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                    
+                    // Forma aleatoria (círculo o cuadrado)
+                    if (Math.random() > 0.5) {
+                        confetti.style.borderRadius = '50%';
+                    }
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Eliminar el confeti después de que termine la animación
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 5000);
+                }, i * 20);
+            }
+        }
+        
+        // Control de música
+        const audio = document.getElementById('birthdayAudio');
+        const musicControl = document.getElementById('musicControl');
+        let isPlaying = false;
+        
+        // Función para iniciar la música
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }).catch(error => {
+                console.log("Reproducción automática falló: ", error);
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                musicControl.style.backgroundColor = 'rgba(255, 200, 200, 0.9)';
+            });
+        }
+        
+        // Intentar reproducir con interacción del usuario
+        document.addEventListener('click', function() {
+            if (!isPlaying) {
+                playAudio();
+            }
+        }, { once: true });
+        
+        musicControl.addEventListener('click', function() {
+            if (isPlaying) {
+                audio.pause();
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                audio.play();
+                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        // Iniciar confeti
+        createConfetti();
+        
+        // Repetir confeti cada 5 segundos
+        setInterval(createConfetti, 5000);
+        
+        // Efecto de escritura para el mensaje
+        function typeWriterEffect() {
+            const messageElement = document.querySelector('.message');
+            const originalText = messageElement.textContent;
+            messageElement.textContent = '';
+            
+            let i = 0;
+            function type() {
+                if (i < originalText.length) {
+                    messageElement.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                }
+            }
+            type();
+        }
+        
+        // Iniciar efecto de escritura después de un breve retraso
+        setTimeout(typeWriterEffect, 1000);
+        
+        // Cargador de imagen
+        document.getElementById('uploadTrigger').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.alt = "Mi hermana";
+                        
+                        const container = document.querySelector('.photo-container');
+                        container.innerHTML = '';
+                        container.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            
+            input.click();
+        });
+    </script>
+</body>
+</html>
