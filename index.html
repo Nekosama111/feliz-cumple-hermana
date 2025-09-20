@@ -27,14 +27,28 @@
         
         .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 2.5rem;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             z-index: 10;
             max-width: 600px;
             width: 100%;
             animation: fadeIn 2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+            z-index: -1;
         }
         
         h1 {
@@ -45,32 +59,14 @@
         }
         
         .photo-container {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             overflow: hidden;
             margin: 0 auto 1.5rem;
             border: 5px solid #e75480;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .photo-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #f5c3e6, #b19cd9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 20px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .photo-placeholder:hover {
-            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
         
         .photo-container img {
@@ -90,6 +86,20 @@
             margin: 1rem 0;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
             font-weight: bold;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .age::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #f5c3e6, #e75480, #f5c3e6);
+            border-radius: 2px;
         }
         
         .message {
@@ -97,6 +107,7 @@
             line-height: 1.6;
             margin: 1.5rem 0;
             text-align: center;
+            position: relative;
         }
         
         .from {
@@ -104,12 +115,16 @@
             font-style: italic;
             color: #666;
             font-size: 1.1rem;
+            padding: 15px;
+            border-top: 1px solid #eee;
         }
         
         .date {
             margin-top: 1rem;
             font-weight: bold;
             color: #e75480;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
         }
         
         .confetti {
@@ -138,7 +153,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background: linear-gradient(to right, #e75480, #d43d6d);
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -147,23 +162,26 @@
             align-items: center;
             cursor: pointer;
             z-index: 100;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            border: none;
         }
         
         .music-control:hover {
             transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
         
         .music-control i {
             font-size: 28px;
-            color: #e75480;
+            color: white;
         }
         
         .cake {
             font-size: 4rem;
             margin: 1rem 0;
             animation: bounce 2s infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         @keyframes bounce {
@@ -171,30 +189,42 @@
             50% { transform: translateY(-20px); }
         }
         
-        .instructions {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .github-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
             background: #e75480;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float 15s infinite;
+            z-index: 0;
         }
         
-        .github-link:hover {
-            background: #d43d6d;
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background: #ffcc00;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(20deg); }
+        }
+        
+        .youtube-audio {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            opacity: 0.01;
+            pointer-events: none;
+            z-index: -1;
         }
         
         @media (max-width: 768px) {
@@ -226,11 +256,7 @@
         <h1>¡Feliz Cumpleaños!</h1>
         
         <div class="photo-container">
-            <!-- Reemplaza esto con la foto de tu hermana -->
-            <div class="photo-placeholder" id="uploadTrigger">Haz clic para seleccionar una foto</div>
-            <!-- Para agregar la foto: 
-                 <img src="URL_DE_LA_FOTO" alt="Mi hermana">
-            -->
+            <img id="birthday-photo" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Foto de cumpleaños">
         </div>
         
         <div class="cake">🎂</div>
@@ -246,23 +272,81 @@
     <div class="music-control" id="musicControl">
         <i class="fas fa-volume-up"></i>
     </div>
-    
-    <audio id="birthdayAudio" loop>
-        <!-- Audio integrado usando un data URI para evitar problemas de URL -->
-        <source src="data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-    </audio>
 
-    <div class="instructions">
-        <p><strong>Instrucciones para GitHub:</strong></p>
-        <p>1. Guarda este código como index.html</p>
-        <p>2. Crea un repositorio en GitHub con el nombre: feliz-cumple-hermana</p>
-        <p>3. Sube el archivo index.html y tu foto al repositorio</p>
-        <p>4. Activa GitHub Pages en la configuración del repositorio</p>
-        <a href="https://github.com/new" class="github-link" target="_blank">Crear repositorio en GitHub</a>
-    </div>
+    <!-- Reproductor de YouTube oculto para el audio -->
+    <div class="youtube-audio" id="youtube-audio"></div>
 
     <script>
+        // ===================================================================
+        // CONFIGURACIÓN
+        // ===================================================================
+        
+        // URL de la imagen (reemplaza con la URL de la foto de tu hermana desde ImgBB)
+        const IMAGE_URL = 'https://i.ibb.co/wNgcYDvx/Imagen-de-Whats-App-2025-09-19-a-las-19-13-00-bea6f472.jpg';
+        
+        // ID del video de YouTube: https://www.youtube.com/watch?v=5ar42kauTd8
+        const YOUTUBE_VIDEO_ID = '5ar42kauTd8';
+        
+        // ===================================================================
+        // NO ES NECESARIO EDITAR NADA DEBAJO DE ESTA LÍNEA
+        // ===================================================================
+        
+        // Elementos DOM
+        const birthdayPhoto = document.getElementById('birthday-photo');
+        const musicControl = document.getElementById('musicControl');
+        const youtubeAudio = document.getElementById('youtube-audio');
+        
+        // Estado de la aplicación
+        let isPlaying = true;
+        let youtubePlayer;
+        
+        // Cargar imagen desde URL
+        function loadImage() {
+            if (!IMAGE_URL) {
+                console.error('No hay URL de imagen configurada');
+                return;
+            }
+            
+            birthdayPhoto.src = IMAGE_URL;
+            birthdayPhoto.onerror = function() {
+                console.error('Error al cargar la imagen. Verifica que la URL sea correcta.');
+            };
+        }
+        
+        // Cargar reproductor de YouTube para audio
+        function loadYouTubeAudio() {
+            if (!YOUTUBE_VIDEO_ID) {
+                console.error('No hay ID de video configurado');
+                return;
+            }
+            
+            // Crear iframe de YouTube
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0&modestbranding=1&rel=0`;
+            iframe.width = "100";
+            iframe.height = "100";
+            iframe.frameBorder = '0';
+            iframe.allow = 'autoplay; encrypted-media';
+            iframe.allowFullscreen = false;
+            
+            youtubeAudio.appendChild(iframe);
+            youtubePlayer = iframe;
+        }
+        
+        // Control de música
+        function toggleMusic() {
+            if (!youtubePlayer) return;
+            
+            if (isPlaying) {
+                youtubePlayer.src = youtubePlayer.src.replace('autoplay=1', 'autoplay=0');
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                youtubePlayer.src = youtubePlayer.src.replace('autoplay=0', 'autoplay=1');
+                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+        
         // Crear confeti
         function createConfetti() {
             const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#ffafcc', '#83e377', '#e75480', '#9b5de5'];
@@ -299,43 +383,34 @@
             }
         }
         
-        // Control de música
-        const audio = document.getElementById('birthdayAudio');
-        const musicControl = document.getElementById('musicControl');
-        let isPlaying = false;
-        
-        // Función para iniciar la música
-        function playAudio() {
-            audio.play().then(() => {
-                isPlaying = true;
-                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-            }).catch(error => {
-                console.log("Reproducción automática falló: ", error);
-                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
-                musicControl.style.backgroundColor = 'rgba(255, 200, 200, 0.9)';
-            });
+        // Crear globos
+        function createBalloons() {
+            const colors = ['#e75480', '#45b7d1', '#f9c74f', '#83e377', '#9b5de5'];
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const size = Math.floor(Math.random() * 20) + 30;
+                    const left = Math.floor(Math.random() * 100);
+                    const delay = Math.floor(Math.random() * 15);
+                    
+                    balloon.style.backgroundColor = color;
+                    balloon.style.width = `${size}px`;
+                    balloon.style.height = `${size * 1.2}px`;
+                    balloon.style.left = `${left}vw`;
+                    balloon.style.animationDelay = `${delay}s`;
+                    
+                    document.body.appendChild(balloon);
+                }, i * 300);
+            }
         }
         
-        // Intentar reproducir con interacción del usuario
-        document.addEventListener('click', function() {
-            if (!isPlaying) {
-                playAudio();
-            }
-        }, { once: true });
-        
-        musicControl.addEventListener('click', function() {
-            if (isPlaying) {
-                audio.pause();
-                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            } else {
-                audio.play();
-                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
-            }
-            isPlaying = !isPlaying;
-        });
-        
-        // Iniciar confeti
+        // Iniciar efectos visuales
         createConfetti();
+        createBalloons();
         
         // Repetir confeti cada 5 segundos
         setInterval(createConfetti, 5000);
@@ -357,33 +432,14 @@
             type();
         }
         
-        // Iniciar efecto de escritura después de un breve retraso
-        setTimeout(typeWriterEffect, 1000);
-        
-        // Cargador de imagen
-        document.getElementById('uploadTrigger').addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadImage();
+            loadYouTubeAudio();
+            setTimeout(typeWriterEffect, 1000);
             
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const img = document.createElement('img');
-                        img.src = event.target.result;
-                        img.alt = "Mi hermana";
-                        
-                        const container = document.querySelector('.photo-container');
-                        container.innerHTML = '';
-                        container.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            
-            input.click();
+            // Configurar control de música
+            musicControl.addEventListener('click', toggleMusic);
         });
     </script>
 </body>
